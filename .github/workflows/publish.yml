@@ -1,0 +1,60 @@
+name: Publish NPM Package
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Install Bun
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          bun install
+
+      # Step 4: Setup Git user
+      - name: Setup Git user
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+
+      # Step 5: Change version
+      - name: Bump version
+        run: |
+          npm version patch
+
+      # Step 6: Make generate-exports.sh executable
+      - name: Make generate-exports.sh executable
+        run: |
+          chmod +x ./generate-exports.sh
+
+      # Step 7: Build the project
+      - name: Build the project
+        run: |
+          bun run build
+          
+      # Step 8: Publish to NPM
+      - name: Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          npm publish --access public
+
+      # Step 9: Clean up .npmrc file
+      - name: Cleanup NPM token
+        run: |
+          rm -f .npmrc

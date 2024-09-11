@@ -1,0 +1,59 @@
+{
+  "name": "@hikasami/icons",
+  "version": "1.0.6",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "author": "Hikasami",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "types": "dist/types/index.d.ts",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hikasami/icons",
+    "directory": "/"
+  },
+  "scripts": {
+    "build": "run-s svgr-icons exports build:es build:cjs types",
+    "build:es": "BABEL_ENV=es babel src --out-dir \"dist/es\" --extensions \".ts,.tsx\"",
+    "build:cjs": "BABEL_ENV=cjs webpack --config=webpack/prod.js",
+    "svgr-icons": "rm -rf src/icons; svgr -d src/icons -- src/assets/icons/**/; rm src/icons/index.ts",
+    "exports": "./generate-exports.sh",
+    "types": "tsc --emitDeclarationOnly --declarationMap --declaration --noEmit false --allowJs false --outDir dist/types",
+    "prepack": "bun run build"
+  },
+  "lint-staged": {
+    "*.@(js|jsx|ts|tsx)": "prettier --write"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.7",
+    "@inline-svg-unique-id/react": "^1.2.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.16.7",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
+    "@hikasami/eslint-config-react": "^1.0.2",
+    "@svgr/cli": "^8.1.0",
+    "@types/react": "^17.0.38",
+    "babel-loader": "^9.0.1",
+    "babel-plugin-react-inline-svg-unique-id": "^1.3.1",
+    "clean-webpack-plugin": "^4.0.0",
+    "npm-run-all": "^4.1.5",
+    "react": "^17.0.2",
+    "source-map-loader": "^4.0.1",
+    "terser-webpack-plugin": "^5.3.0",
+    "typescript": "^5.4.4",
+    "webpack": "^5.52.1",
+    "webpack-cli": "^5.0.1",
+    "webpack-merge": "^5.2.0"
+  }
+}

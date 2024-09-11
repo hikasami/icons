@@ -1,0 +1,1 @@
+module.exports = require('@hikasami/eslint-config-react/prettier.config.js')
